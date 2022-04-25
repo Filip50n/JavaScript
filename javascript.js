@@ -320,3 +320,7 @@ function operatoryAndorazOR(){
     // ta funkcja robi dokładnie to samo co powyższy if 
 
 }
+
+function sredniki(){
+    console.log("średniki")
+}
