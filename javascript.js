@@ -323,4 +323,122 @@ function operatoryAndorazOR(){
 
 function sredniki(){
     console.log("średniki")
+
+    // w javascript średniki nie są obowiązkowe
+    // średniki służą do tego aby zakomunikować porgramowi koniec pewnej instrukcji oraz przejście do kolejnej instrukcji
+    // dzięki wykorzystniu średników nasz interpreter wie gdzie kończy się dana instrukcja a zacznyna nowa
+    // jednak javascript dane nam narzędzie o nazwię Automatic Semicolon Insertion (ASI) czyli automatyczne wstawianie średników
+    // poprzez wykorzystanie tego narzędzia program jakby stara się przewidzieć w którym miejscu kończy sie dana instrukcja a nastepnie traktuje to tak jak gdyby tam był średnik
+    
+    // Zasady które wykorzystuje ASI przy automatycznym generowaniu średników:
+    // 1. a) Jeżeli program trafi na coś co gramatycznie nie pasuje w danej lini kodu jednak pomiedzy tym jest znak nowej lini wtedy wstawia średnik
+    const a = 2
+    const b = 2
+
+    // jest przez program postrzegane jako
+    // const a = 2;
+    // const b = 2;
+
+    // a nie 
+    // const a = 2const b = 2
+
+    // jednak jeśli mamy sytuacje gdzie kod zostanie przez nas napisany w następujący sposób
+    // const a = 2                  const b = 2
+    // nadal zostanie zwrócony błąd ponieważ nie ma znaku przejścia do nowej lini (ENTER)
+
+    // 1. b) Jeśli trafi na niepasujący znak to "}" w takim przypadku również zostanie wstawiony średnik nawet gdy nie bedzie przejścia do nowej lini (ENTER)
+
+    function test(){
+        const a = 3
+    }
+
+    // istnieją strony takie jak BABEL które potrafią przekonwertować nasz kod dodając średniki ponieważ starsze przeglądarki mogą nie wspierać ASI
+
+    // 2. Na końcu pliku
+
+    // 3. a) Jeżeli po instrukcjach typu continue, break, throw, return jest nowa linia (ENTER) również wstawiany jest średnik
+
+    function test1(){
+        return 2
+    }
+
+    // przez przeglądarke otrzymamy
+    // function test1(){
+    //     return 2;
+    // }
+
+    // JEDNAK NALEZY TUTAJ UWAŻAĆ PONIEWAŻ JEŚLI JEST PRZEJŚCIE DO NOWEJ LINI TO ŚREDNIK I TAK ZOSTANIE WSTAWIONY
+
+    function test2(){
+        return 
+        2
+    }
+
+    // przez przeglądarke otrzymamy
+    // function test2(){
+    //     return ;
+    //     2;
+    // }
+    // w tym przypadku funkcja zwróciła by nam UNDEFINED
+
+    function test2(){
+        return 
+        {
+            name: 'Filip'
+        }
+    }
+
+    // przez przeglądarke otrzymamy
+    // function test2(){
+    //     return; 
+    //     {
+    //         name: 'Filip';
+    //     }
+    // }
+    // w tym przypadku funkcja również zwróciła by nam UNDEFINED więc należy o tym pamiętać jednak dodawanie średników recznie również nas przed niczym nie uchroni ponieważ średnik znajdzie się i tak w tym miejscu
+
+    // należy pamiętać że działanie ASI to nie jest coś co możemy wyłączyć program i tak bedzie z niego korzystał
+
+    // to co chcemy zwracać po słówku RETRUN zawsze musi się zaczynać zaraz po nim poniważ w innym przypadku ASI wstawi nam tam średnik
+
+    function test2(){
+        return {
+            name: 'Filip'
+        }
+    }
+
+    // przez przeglądarke otrzymamy
+    // function test2(){
+    //     return {
+    //         name: 'Filip';
+    //     }
+    // }
+
+    // 3. b) Jeżeli nie ma przejścia do nowej lini ale kolejnym znakiem jest znak "}" to zostanie wstawiony średnik
+
+    // ASI niesie ze sobą kilka niebiezpieczeńst przede wszystkim to to aby po słówku RETURN nie wstawiać znaku nowej lini (ENTER) jest coś zweracane to musi być w tej samej lini
+    //w przykładzie:
+
+    const c = 3
+    [1,2,3].map()
+
+    // przez przeglądarke otrzymamy
+    // const c = 3[1,2,3].map();
+    // w tym przypadku średnik nie zostanie wstawiony ponieważ powyższy przykład jest gramatycznie poprawny
+    // rozwiązaniem tego problemu może być używanie średnika przed znakiem "[" jeżeli jest to pierwszy znak w naszej nowej lini
+    // const c = 3
+    // ;[1,2,3].map()
+
+    function test3(){}
+    test3()
+
+    const d = 3
+    (2+3)
+    
+    // przez przeglądarke otrzymamy
+    // function test3(){}
+    // test3()
+
+    // const d = 3(2+3)......
+    // w tym przypadku również tak samo jak przed nawiasem "[" powiniiśmy postawić przed nawiasem "(" średnik
 }
