@@ -434,11 +434,262 @@ function sredniki(){
 
     const d = 3
     (2+3)
-    
+
     // przez przeglądarke otrzymamy
     // function test3(){}
     // test3()
 
     // const d = 3(2+3)......
     // w tym przypadku również tak samo jak przed nawiasem "[" powiniiśmy postawić przed nawiasem "(" średnik
+}
+
+function immediatelyInvokedFunctionExpression(){
+    console.log("Natychmiastowo wywołująca się funkcja (IIFE)");
+    // ----------------------------------------------------------------- natychmiastowo wywołująca się funkcja --------------------------------------------------------------------------
+
+    //struktura funkcji:
+    (() => {
+        const name = "Filip"
+        console.log('Witaj ' + name)
+    })();
+
+    // jest to samo wywołująca się funkcja Immediately-invoked Function Expression (IIFE)
+    // jest to funkcja która po uruchomieniu programu sama się wywołuje w efakcie czego po uruchomineiu programu 
+    // nasz wynik: hello
+
+    //jednak czym różni się zapis
+    (() => {
+        console.log('Witaj')
+    })();
+    
+    // od zwykłego zapisu
+
+    console.log('Witaj');
+
+    // pierwszą różnicą jest to że drugi przypadek nie jest funkcją jest to poprostu polecenie w przestrzeni globalnej
+    // dzięki wykorzystaniu IIFE możegy zgrupować pewien fragmet kodu i zamknąć go właśnie w jednej samo wywołującej się funkcji pozwala nam to zachować porządek
+    // kolejnym plusem jest to że przy tworzeniu pewnych zmiennych nie zaśmiecamy globalnej przestrzeni tymi zmiennymi tylko są one upożądkowane w funkcji
+
+    (() => {
+        const name = "Filip"
+        console.log('Witaj ' + name)
+    })();
+
+    //console.log(name);
+
+    // jednak gdy spróbujemy wywołać wcześniej zdefiniowane name poza funkcją IIFE otrzymamy BŁĄD informujący nas o tym że name nie zostało zdefiniowane
+    // co dobrze pokazuje że zmienne tworzone w takiej funkcji są lokalne i nie przechodzą do przestrzeni globalnej dzięki czemu pozwoli to nam jej nie zaśmiecać oraz wyznaczać granice zmiennych takie jakich potrzebujemy
+
+    // zmienne wykoszystywane  w tej funkcji są dostępne tylko w niej. Nie są dostępne poza nią w przestrzeni globalnej
+    // może zostać to wykorzystane przy dużym projekcie np 10 skryptów gdzie np w 3 skryptach powtarza się nazwa danej zmiennej w takiej sytuacji jeden skrypt będzie nadpisywał wartość w innym skrypcie
+    // poprzez wykorzystanie właśnie takiej funkcji IIFE możemy określić zasięg danej zmiennej i zapobiec takim sytułacją
+
+    // o co chodzi z zapisem czemu wygląda tak nie naturalnie:
+    (() => {
+        const name = "Filip"
+        console.log('Witaj ' + name)
+    })();
+
+    // a nie po prostu:
+    function funkcjaTestowa(){
+        const name = "funkcje testową"
+        console.log('Uruchamiam ' + name)
+    }
+
+    funkcjaTestowa();
+    // to też zadziała identycznie. Jednak to nie jest funkcja która się wykona od razu ponieważ wymagane jest najpierw zapisanie tej funkjcji do pamięci i potem ją wywołać oraz uruchomić
+    // w przeciwieństwie do funkcji IIFE gdzie raz ją uruchamiamy i nie jest ona zapisywana do żadnej zmiennej
+    
+    // możemy również stwożyć funkcjie anonimową jednak wymagane jest również jej przypisanie do jakiejś zmiennej
+
+    const funkcjaTestowa1 = function () {
+        const name = "funkcje testową 1"
+        console.log('Uruchamiam ' + name)
+    }
+
+    funkcjaTestowa1()
+    // aplikacja nadal działa tak samo jednak w żaden sposób nam to nie pomogło
+    // uruchomienie funkcji anonimowej to wypisanie zmiennej w której jest ona przechowywana a następnie dodanie do niej "()"
+
+    // jednak możemy również wywołać ją w sposób następujący
+    const funkcjaTestowa2 = function () {
+        const name = "funkcje testową 2"
+        console.log('Uruchamiam ' + name)
+    }()
+    // i to również będzie działać czyli prawie to samo jednak nadal występuje przypisanie funkcji do zmiennej co jest zaśmiecaniem pamięci ponieważ takie zapisanie nie jest czymś czego potrzebujemy i oczekujemy
+    
+    // function () {
+    //     const name = "funkcje testową 2"
+    //     console.log('Uruchamiam ' + name)
+    // }()
+    // jednak wywołanie funkcji w taki sposób już nie będzie działało dlatego że gramatycznie nie jest to już poprawne ponieważ javascript przy wykonywaniu kodu gdy następuje ta linijka nie spodziewa się funkcji anonimowej
+
+    +function () {
+        const name = "funkcje testową 3"
+        console.log('Uruchamiam ' + name)
+    }()
+
+    // jednak niewielka modyfikacja w postaci postawienia znaku "+" przed definicją funkcji naprawia nam ten błąd przez co program uruchomi się
+    
+    //Aby zrozumieć co się stało i czemu dodanie "+" przed definicją funkcji musimy zrozumieć jak dokładnie działa "+" w javascript
+
+    const number = '1234'
+    console.log(number)
+    console.log(typeof number)
+    // nasz wynik: string
+    // podana kod pokazuje nam zawarość zmiennej number oraz typ jaki ta zmienna przechowuje
+
+    const number1 = +'1234'
+    console.log(number1)
+    console.log(typeof number1)
+    // nasz wynik: number    
+    // jednak po niewielkiej modyfikacji czyli po dodaniu "+" możemy zauwazyć ze nasz typ zmiennej się zmienił ze STRING na NUMBER
+    // więc możemy powiedzieć że dodanie "+" zmieniło typ naszej zmiennej ze STRING-a na NUMEBER (a przynajmniej stara się zmienić)
+
+    const number2 = +'Filip'
+    console.log(number2)
+    console.log(typeof number2)
+    // nasz wynik: NaN
+    // nasz wynik: number
+    // ponieważ w przypdaku gdy przechowywana zmienna nie jest liczbą zmieni nam wartość NaN jednak typ zmiennej nadal pozostaje jako NUMBER
+
+    // analogiczna sytuacja dzieje się w przypadku użycia symbolu "+" przy definicji funkcji
+    +function () {
+        const name = "funkcje testową 4"
+        console.log('Uruchamiam ' + name)
+    }()
+    // symbol "+" stara się przekonwertować całą funkcje na liczbe (oczywiście również się nie uda naszym wynikiem będzie NaN) jednak w trakcie kiedy próbuje to przekonwerować jednocześnie ta funkcja musi sie uruchomić
+    // w wyniku czego nasza funkcja zostanie uruchomiona
+
+    const test = +function () {
+        const name = "funkcje testową 4"
+        console.log('Uruchamiam ' + name)
+    }()
+    console.log(test);
+    console.log(typeof test);
+    // nasz wynik: NaN
+    // nasz wynik: number
+    // więc tak jak we wczesniejszym przypadku który zwrócił nam błąd javascript patrzył na deklaracje function i się jej nie spodziewał tak teraz patrzy na całość (włącznie z symbolem "+") próubując zmienić typ na NUMBER
+
+    // funkcja zostaje uruchomiona oraz przekonwertowana na wartość NaN 
+    // jednak zmiana funkji na wyrażenie możemy zrobić na kilka różnych sposobów "+" jest jednym z nich możemy również użyć np "-" lub "!" albo "()" w którym znajduje się nasza funkcja
+
+    (function () {
+        const name = "funkcje testową 4"
+        console.log('Uruchamiam ' + name)
+    }())
+
+    // przykładowo jeśli chcielibyśmy zrobic
+    const number3 = 2 + 2 * 4
+    console.log(number3)
+    // nasz wynik: 10
+    // nasz wynik to 10 ponieważ pierwsze jest mnożenie a następnie dodawanie jednak gdybyśmy chcieli aby najpierw wykonane zostało dodawanie powiniśmy wziąść je w nawiasy
+
+    const number4 = (2 + 2) * 4
+    console.log(number4);
+    // nasz wynik: 16
+    // jednak "()" to nie jest jedynie zapis matematyczny w javascript nie mówią one że najpierw ma się wykonać dodawanie a potem mnożenie
+    // nawiasy działają w taki sposób że wykonywany jest kod który znajduje się wewnątrz a następnie zwraca jego wartość czyli wykona 2 + 2 oraz zwróci 4 a dopiero następnie wyona sie 4 * 4
+
+    // jednak my musimy skupic sie na tym że "()" wykonują kod który znajduje się wewnątrz nich a następnie zwraca jego wartość więc jeśli wewnątrz nawiasów znajdzie się funkcja
+
+    (
+        function () {
+        const name = "funkcje testową 5"
+        console.log('Uruchamiam ' + name)
+    }()
+    );
+    // więc równie dobrze możemy wewnątrz "()" wziąść naszą funkcjie sprawia to że funkcja zostanie wykonana a jej wartośc zostanie zwrócona
+    // sprawdźmy zataem co zwrócą "()" gdy wstawimy do nich naszą funkcję
+
+    const test1 = (
+        function () {
+        const name = "funkcje testową 6"
+        console.log('Uruchamiam ' + name)
+    }()
+    );
+    console.log(test1)
+    // nasz wynik: undefined
+    // zwracany jest UNDEFINED poniewaz nic przez naszą funkcję nie jest zwracane
+
+    const test2 = (
+        function () {
+        const name = "funkcje testową 7"
+        console.log('Uruchamiam ' + name)
+        return 9
+    }()
+    );
+    console.log(test2);
+    // nasz wynik: 9
+    // jednak w przypadku gdy nasza funkcja będzie coś zwracała to wynikiem będzie to co zwraca nasza funkcja znajduąca się pomiędzy "()"
+    // jednak nadal w przypadku wstawienia funkcji pomiedzy "()" została ona wykonana. ZOSTAŁA ONA POTRAKTOWANA JAKO WYRAŻENIE
+    // funkcja została przez javascript przekonwertowana i zwrócona jako UNDEFINED który sam w sobie nie generuje błędów dzięki czemu nasz kod działa
+
+    // możemy również uprościć nasz zapis kożystając z funkcji strzałkowej
+    // (
+    //     () => {
+    //     const name = "funkcje testową 7"
+    //     console.log('Uruchamiam ' + name)
+        
+    //     }()
+    // );
+    // jednak w przypadku zastosowania takiego zapisu nagle otrzymujemy błąd taki zapis jest nie zgodny i nie możemy uzyć od razu wyowołania naszej funkcji zaraz po jej deklaracji
+    // jednak spróbujmy pominąć ten fakt i spróbujmy usunąć wywołanie funkcji po jej deklaracji oraz sprawdźmy co zostanie zwrócone
+
+    const test3 = (
+        () => {
+        const name = "funkcje testową 8"
+        console.log('Uruchamiam ' + name)
+        
+        }
+    );
+    console.log(test3);
+    // nasz wynik: [Function: test]
+    // w tym momencie zwrócona została po prostu nasza funkcja a jak wiemy możemy wywołać naszą funkcje od razu po jej zadeklarowaniu czyli sposobem na jej uruchomienie jest po prostu dodanie nawiasów po "()" w której znajduje się nasza funkcja
+    
+    (
+        () => {
+        const name = "funkcje testową 9"
+        console.log('Uruchamiam ' + name)
+        
+        }
+    )();
+    // po dodaniu () wywołujących funkcjie znajdującą się wewnątrz "()" nasza funkcja uruchamia się poprawnie i w ten sposób dotarliśmy do zapisu taki jaki był na poczatku
+    // zapis ten nie jest bardzo czytelny jednak dzieki niemu możemy wywołać funkcje 
+
+    // istnieją 2 możliwości wywoływania funkcji IIFE pierwszą możliwością jest
+    (() => {
+        const name = "funkcje testową 10"
+        console.log('Uruchamiam ' + name)
+        
+    })();
+    // jest to poprawne i ten zapis wykorzystuje funkcję strzałkową
+    // oraz
+    (function() {
+        const name = "funkcje testową 11"
+        console.log('Uruchamiam ' + name)
+        
+    }());
+    // ten zapis również jest poprawny ale nie wykorzystuje on funkcji strzałkowej
+    // jedyną rużnicą jest miejsce () wywołujących funkcję jednak NALEŻY PAMIĘTAĆ ŻE W WYKORZYSTUJĄC FUNKCJĘ STRZAŁKOWĄ NAWIASY MUSZA BYĆ POZA "()" W KTÓRYCH ZAWIERA SIĘ WYKONYWANA FUNKCJA
+    // A WY PRZYPADKU NIE WYKORZYSTYWANIA FUNKCJI STRZAŁKOWYEJ () WYWOLUJĄCE FUNKCJĘ MUSZĄ BYĆ WEWNĄTRZ LUB ZEWNĄTRZ "()" W KTÓRYCH ZNAJDUJE SIĘ WYWOŁYWANA FUNKCJA
+
+    // takie są zasady działania javascriptu i nalezy o nich pamiętać
+
+    (function() {
+        const name = "funkcje testową 12"
+        console.log('Uruchamiam ' + name)
+        
+    }());
+    // w tym przypadku funkcja zostanie od razu uruchomiona a następnie zostanie zwrócony jej rezultat
+
+    (function() {
+        const name = "funkcje testową 13"
+        console.log('Uruchamiam ' + name)
+        
+    })();
+    // w tym przypadku funkcja znajdująca się wewnątrz najpierw zostanie zwrócona jako funkcja poprzez "()" w których sie znajduje a następnie wywołana przez () znajdujące się poza
+
+    // częstrzym przypadkiem który możemy spotkać jest umiejscowienie () wywołujących funkcje na zewnątrz "()" w których znajduje się funkcja ponieważ coraz częściej wykorzystywane są funkcje strzałkowe
+    // a ona wymaga aby te nawiasy były poza "()" w których znajduje się funkcja
 }
