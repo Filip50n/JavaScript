@@ -8,7 +8,7 @@ function test(){
 
 function operatoryPorownania(){
     console.log("operatory porównania == vs ===")
-    // JavaScript to język z dynamicznym typowaniem - oznacza to że Java w żaden sposób nie ustala zmiennej np a od razu typu np Number czyli że jest liczbą 
+    // JavaScript to język z dynamicznym typowaniem - oznacza to że JavaScript w żaden sposób nie ustala zmiennej np a od razu typu np Number czyli że jest liczbą 
     // (np w zwykłej Javie definiujemy to np za pomocą inicjalizacji int/string ... itd) typ zostaje dopiero rozpoznany za pomocą tego co zostało do danej zmiennej przypisane
     // !!! W TRAKCIE DZIAŁANIA PROGRAMU TYP ZMIENNEJ MOŻE SIĘ ZMIENIĆ !!!
     // let a = 1
@@ -690,6 +690,243 @@ function immediatelyInvokedFunctionExpression(){
     })();
     // w tym przypadku funkcja znajdująca się wewnątrz najpierw zostanie zwrócona jako funkcja poprzez "()" w których sie znajduje a następnie wywołana przez () znajdujące się poza
 
-    // częstrzym przypadkiem który możemy spotkać jest umiejscowienie () wywołujących funkcje na zewnątrz "()" w których znajduje się funkcja ponieważ coraz częściej wykorzystywane są funkcje strzałkowe
+    // częstszym przypadkiem który możemy spotkać jest umiejscowienie () wywołujących funkcje na zewnątrz "()" w których znajduje się funkcja ponieważ coraz częściej wykorzystywane są funkcje strzałkowe
     // a ona wymaga aby te nawiasy były poza "()" w których znajduje się funkcja
+}
+
+function operatoryJednowarunkowe(){
+    console.log("operatory jednowarunkowe + - !")
+     // ----------------------------------------------------------------- operatory jednowarunkowe + - !! -----------------------------------------------------------------------------------------
+
+     2 + 3;
+     // operator 2 argumentowy "+" ponieważ posiada jakąś zmienną po lewej i prawej stronie
+
+     + 3;
+     // operator jedno argumientowy poneiważ przy "+" jest tylko jedna zmienna
+
+     // operatory jedno argumentowe mogą również pracować na wartościach które nie są liczbami
+    + 'przykład';
+    // czyli mogą tak naprawdę pracować na czym kolwiek
+
+    // podobną sytuacjię otrzymamy gdy zamiast operatora "+" wykorzystamy operator "-"
+    - 'przykład';
+    // lub "!"
+    ! "przykład";
+    !! "przykład";
+
+    // OPERATOR JEDNOARGUMENTOWY - jest to operator kótry przyjmuje wyłącznie jedną wartość i coś zwraca
+
+    // ----------------------------------------------------------------- operator + -----------------------------------------------------------------------------------------
+    // operator "+" stara się przekonwertować jakąś wartość która bedzie przez niego przyjmowana na liczbę
+    // oznacza to że jeśli przyjmie liczbę to nic się nie zmieni
+    // jednak jeśli będzie to string który reprezentuje pewną liczbę to postara zmienić sie go na liczbę (czyli zmienić typ zmiennej ze "STRING" na "NUMBER")
+
+    const test = "4";
+    console.log(typeof test);
+    // nasz wynik: string
+    console.log(typeof +test);
+    // nasz wynik: number
+
+    // pytanie gdzie takie coś może nam się przydać?
+    // pierwszym przykładem może być funkcjia IIFE która została omówiona wyżej 
+
+    // kolejnym przykładem może być:
+    // Zadada działania strony:
+    // mamy prostą strone która zawiera 2 inputy typu number oraz przycisk do dodawania (do sumowania dwóch wprowadzonych liczb)
+    // zasada działania skryptu jest bardzo prosta
+    // javascript znajduje button potem zostaje do niego dodany Listener w momencie kliknięcia w ten button wykonuje się funkcja "addNumbers" która z kolei:
+    document.querySelector('button').addEventListener("click", addNumbers2)
+
+    function addNumbers(){
+        // pobiera oraz zapisuje wartości które zaostały przez nas wprowadzone do inputów
+        const number1 = document.querySelector('#number1').value
+        const number2 = document.querySelector('#number2').value
+
+        // dodaje do siebie te wartości
+        const result = number1 + number2
+        // oraz wynik zostanie wyświetlony w konsoli
+        console.log(result)
+    }
+    // jednak po próbie uruchomienia tego skryptu oraz przetestowania go w konsoli widzimy coś niespodziewanego ponieważ kiedy wprowadzimy do inputów warotści "2" oraz "5"
+    // naszym wynikiem będzie "25" a nie to o co nam chodziło czyli liczba "7"
+    // dzieje się tak dlatego ponieważ zawsze wartości pobierane z inputów pobierane są jako STRING nawet wtedy gdy input ma typ NUMBER
+    // nawet jeśli wpiszemy do inputów liczbę to i tak zostaną one pobrane jako STRING
+    // nasz wynik również zostanie zwrócony jako STRING czyli nastąpiło tutaj połączenie dwóch stringów
+
+    function addNumbers1(){
+        // moglibyśmy się przed tym zabespieczyć korzystając z konwersji tych zmiennych na typ NUMBER:
+        const number1 = Number(document.querySelector('#number1').value)
+        // kolejnym sposobem może być sparsowanie pobranej zmiennej do inta:
+        const number2 = parseInt(document.querySelector('#number2').value)
+
+        const result = number1 + number2
+        console.log(result)
+    }
+    // po takim zabiegu oraz zabespieczeniu naszego kodu zacznie on działać jednak jesteśmy w stanie zrobić to w prostrzy sposób przy wykorzystaniu operatora jednoargumentowego "+"
+
+    function addNumbers2(){
+        const number1 = +document.querySelector('#number1').value
+        const number2 = +document.querySelector('#number2').value
+
+        const result = number1 + number2
+        console.log(result)
+    };
+    // i to również zadziała ponieawż będzie starał się on skonwertować wartość którą przyjmuje na typ NUMBER
+
+    // operator jednoargumentowy "+" nie musi przyjmować tylko liczb może przyjąć dosłownie wszystko (np "[]","string") generalnie może on być stosowany zawsze i zawsze będzie starał się postępować 
+    // według paru kroków:
+
+    // jeżeli mamy jakąś wartość np:
+    const value = '...'             // <- jakaś nasza wartość
+    // operator "+" postępuje według 3 kroków
+    // 1. pierwszym krokiem jest pobranie wartoci ("valueOf()") naszej zmiennej
+    value.valueOf()
+
+    //-------------------------------------------------------------------------------------
+    // "valueOf" to wbudowana funkcja we wszystkie obiekty
+    // przykładowo
+    console.log("4".valueOf())
+    // nasz wynik: "4"
+    
+    // jeżeli będziemy mieli jakiś obiekt:
+    {test: "value"}
+    // które przechowywuje jakieś testowe pole i będziemy chcieli użyć na nim "valueOf()"
+    console.log(({test: "value"}).valueOf())
+    // to zwrócona zostanie wartość naszego obiektu
+    // generalnie jest to metoda dostępna w każdym obiekcie w JavaScirpcie
+    //-------------------------------------------------------------------------------------
+
+    //2. stara się sparsować naszą wartość do STRING-a
+    value.toString()
+    // parsowanie do typu STRING odbywa się ponieważ jak widzimy na przykładzie obiektu zwrócony został pewien obiekt więc jeżeli będziemy mieć obiekt to w dalszym ciągu "+" będzie próbował
+    // sparsować go do stringa
+    console.log(({test: "value"}).valueOf().toString())
+    // nasz wynik: "[object Object]""
+
+    //3. na końcu stara się zrzutować naszą wartość do typu NUMBER
+    Number(value)
+    // czyli przekonwertować naszą wartość do liczby
+
+    console.log(Number(({test: "value"}).valueOf().toString()))
+    // nasz wynik: NaN
+    // tutaj podobnie jak w części poświęconej KOERCI TYPÓW otrzymujemy wartość NaN ponieważ nie da się takiego stringa przekonwertować na liczbę
+
+    // dlatego gdy użyjemy operatora jednoargumentowego "+" zwróci on NaN
+    console.log(+{test: "value"})
+    // nasz wynik: NaN
+
+    // powyższe kroki możemy udowodnić nadpisując w naszym obiekcie "valueOf"
+    console.log(+{valueOf: () => {return 9}})
+    // nasz wynik: 9
+    // co udowadnia że operator jednoargumentowy "+" przechodzi przez wszystkie te kroki kożystając miedzy innymi z "valueOf"
+
+    // jednak bardzo ważne jest aby nie mylić operatora jednoargumentowego "+" (+ wartość) z operatorem dwu argumentowym "+" (wartość + wartość)
+    // dlatego że gdy przy operatorze dwuargumentowym "+" będziemy starali się coś dodać jednak jeden z argumentów nie będzie liczbą:
+    console.log('2' + 4)
+    // nasz wynik: 24
+    // w takim przypadku nastąpi połączenie STRING-ów
+    // tak samo w drugą stronę:
+    console.log(2 + "4")
+    // nasz wynik: 24
+    // czyli w takim przypadku robi się coś odwrotnego niż przy użyciu operatora jednoargumentowego "+" ponieważ w przypadku jednoargumentowego operatora "+" zawsze będzie on próbował zwrócić daną zmienną
+    // już z przypisanym typem NUMBER i zawsze zostanie to zwrócone do typu NUMBER jeżeli nie jest to wykonalne to zwrócone zostanie NaN jednak tym nadal zawsze pozostanie NUMBER
+
+    // jednak możemy również w powyższym przypadku użyć operatora jednoargumentowego
+    console.log(2 + + "4")
+    // nasz wynik: 6
+    // zasada działania pozostaje nie zmienna
+
+    // przykład zastosowania operatora jednoargumentowego przy użyciu TIMESTAMP (liczba milisekund od 1 stycznia 1970 dostępna chyba w każdym jezyku programowania dzięki której jesteśmy w stanie odmierzać czas) 
+    // pobranie czasu UNIX-owego:
+    //1.
+    const data = (new Date()).valueOf()
+    console.log(data)
+    // nasz wynik: liczba milisekund od 1 stycznia 1970
+    console.log(data/1000)
+    // nasz wynik: liczba sekund od 1 stycznia 1970
+
+    //2.
+    const data1 = Date.now()
+    console.log(data1)
+    // nasz wynik: liczba milisekund od 1 stycznia 1970
+    // działa to w ten sam sposób
+
+    // jednak korzystając z tego że operatorjednoargumentowy korzysta z metory valueOf() możemy to wykorzystać i użyć sposobu:
+    //3.
+    const data2 = +new Date()
+    console.log(data2)
+    // nasz wynik: liczba milisekund od 1 stycznia 1970
+
+    // zaleta sposobu 1 oraz 3 nad sbosobem nr 2 jest taka że przy tworzeniu new Date() w argumencie mozemy przypisać jakąś datę np starą date
+    const data3 = +new Date('12/1/2021')
+    console.log(data3)
+    // nasz wynik: liczba milisekund od 1 stycznia 1970 do 12 stycznia 2021
+
+    // innym przykładem może być:
+    const value1 = ['2']
+    // chcemy na końcu dostać 2 ale jako typ NUMBER nie jako STRING
+    // możemy tego dokonać poprzez rzutowanie na typ NUMBER
+    console.log(Number(value1[0]))
+    console.log(typeof Number(value1[0]))
+    // nasz wynik: 2
+    // nasz wynik: number
+
+    // możemy jednak zrobić następującą rzecz:
+    // sprawdzźmy co zwróci nam "valueOf()" naszej tablicy
+    console.log(value1.valueOf())
+    // nasz wynik: ['2']
+    // naszym wynikiem będzie po prostu nasza tablica nie jest to zbyt pomocne
+
+    // kolejnym krokiem będzie zastosowanie "toString()"
+    console.log(value1.valueOf().toString())
+    // nasz wynik: '2' [STRING]
+    // metoda ta stara się zmienić naszą wartość do stringa i otrzymujemy tutaj 2 jako string
+
+    // ostatnim etapem może być konwersja na typ NUMBER dzięki czemu otrzymamy to czego oczekiwaliśmy
+    console.log(Number(value1.valueOf().toString()))
+    // nasz wynik: 2 [NUMBER]
+
+    // jednak możemy to samo osiągnąć poprzez zapis
+    console.log(+value1)
+    // nasz wynik: 2 [NUMBER]
+
+    // JEDNAK NALEZY ZAPAMIĘTAĆ ŻE GDY TABLICA POSIADA WIĘCEJ NIŻ 1 ELEMENT NIE OTRZYMAMY JUŻ TAKIEGO WYNIKU PONIEWAŻ ZOSTANIE ZWRUCONE NaN
+    const value2 = ['2', '3']
+    console.log(+value2)
+    // nasz wynik: NaN
+    // dzieje się tak dlatego że gdybyśmy chcieli wykonać krok nr2:
+    console.log(value2.valueOf().toString())
+    // nasz wynik: "2,3"
+    // wiec naszego wyniku nie damy radę przekonwertować na typ NUMBER
+
+    // ----------------------------------------------------------------- operator - -----------------------------------------------------------------------------------------
+    // robi on praktycznie to samo co jednoargumentowy operator "+"
+    // załużmy że wykonuje on wszystkie te same kroki które występują w przypadku użycia "+" jednak na końcu tych kroków dostawia na początku - co zmienia wartość na przeciwną
+    console.log(-"-4")
+    // nasz wynik: 4
+
+    // ----------------------------------------------------------------- operator ! -----------------------------------------------------------------------------------------
+    // operator jednoargumentowy ! odwraca wartość dla przykładu FALSE zmienia na TRUE lub (TRUE ->)
+    console.log(!false)
+    // nasz wynik: true
+
+    // w przypadku zastosowania tego operatora np ze STRINGIEM:
+    console.log(!"test")
+    // nasz wynik: false
+    // widzimy że jest to odwrotny wynik niż tego czego się spodziewaliśmuy ponieważ:
+    console.log(Boolean("test"))
+    // nasz wynik: true
+    // w takim przypadku należy zastosować operator jednoargumentowy !!
+
+
+    // ----------------------------------------------------------------- operator !! -----------------------------------------------------------------------------------------
+    // po co nam w ogóle operatorjednoargumentowy "!!" wynikiem takiego operatora w przypadku postawienia go przy FALSE będzie również FALSE
+    console.log(!!false)
+    // nasz wynik: false
+
+    // jego zastosowanie przedewszystkim daje o sobie znać gdy zmienną którą próbujemy przekonwertować nie jest wartością BOOLEAN
+    // ponieważ zastosowanie go w przypadku tekstu da nam wynik poprawny
+    console.log(!!"test")
+
+
 }
